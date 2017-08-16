@@ -28,7 +28,7 @@ app.use(session({
 // If the user is loged in, they are directed to the home page.
 app.get("/", function(req, res) {
   if (!req.session.username) {
-    return res.redirect("/account");
+    return res.redirect("/login");
   } else {
     res.render("home", {
       username: req.session.username
@@ -36,19 +36,19 @@ app.get("/", function(req, res) {
   }
 });
 
-// Route for login/account page.
-app.get("/account", function(req, res) {
-  res.render("account");
+// Route for login page.
+app.get("/login", function(req, res) {
+  res.render("login");
 });
 
 // Route if username and password match record.
-app.post("/account", function(req, res) {
+app.post("/login", function(req, res) {
   req.checkBody("username", "A username is required.").notEmpty();
   req.checkBody("password", "A password is required.").notEmpty();
 
   let error = req.validationErrors();
   if (error) {
-    return res.render("account", {error: error});
+    return res.render("login", {error: error});
   }
 
   let user = username.filter(function(usernameValidation) {
@@ -57,7 +57,7 @@ app.post("/account", function(req, res) {
 
   if (user.length === 0) {
     error = [{errorMessage: "Username does not match our records."}];
-    res.render("account", {error: error});
+    res.render("login", {error: error});
     return;
   }
 
@@ -68,7 +68,7 @@ app.post("/account", function(req, res) {
     res.redirect("/");
   } else {
     error = [{errorMessage: "The password entered is incorrect."}];
-    res.render("account", {error: error});
+    res.render("login", {error: error});
   }
 });
 
